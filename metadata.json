@@ -1,0 +1,6 @@
+{
+  "name": "iPex Agency",
+  "description": "Premium OnlyFans management and creator growth agency, empowering creators to scale their content and maximize revenue.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
