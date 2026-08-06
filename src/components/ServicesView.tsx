@@ -122,12 +122,12 @@ export default function ServicesView({ onApplyClick }: ServicesViewProps) {
   const activeServicesData = servicesList.filter(s => selectedServices.includes(s.id));
 
   return (
-    <div className="relative min-h-screen bg-[#0a0b1e] text-white overflow-hidden pb-24">
+    <div className="relative min-h-screen bg-transparent text-white overflow-hidden pb-24">
       
       {/* Background decoration */}
       <div className="absolute top-1/4 right-1/4 h-[400px] w-[400px] rounded-full bg-red-600/5 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 left-1/4 h-[450px] w-[450px] rounded-full bg-orange-600/5 blur-[130px] pointer-events-none" />
-      <div className="absolute inset-0 bg-grid opacity-100 pointer-events-none" />
+
 
       {/* Main Header */}
       <div className="relative mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">

@@ -14,16 +14,19 @@ import {
   Loader2,
   Calendar,
   Lock,
-  ChevronDown
+  ChevronDown,
+  Upload,
+  Image as ImageIcon
 } from 'lucide-react';
-import { Application } from '../types';
+import { Application, SiteConfig } from '../types';
 
 interface ApplyViewProps {
   onApplicationSubmit: (app: Application) => void;
   onGoToPortal: () => void;
+  siteConfig?: SiteConfig;
 }
 
-export default function ApplyView({ onApplicationSubmit, onGoToPortal }: ApplyViewProps) {
+export default function ApplyView({ onApplicationSubmit, onGoToPortal, siteConfig }: ApplyViewProps) {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [submittedApp, setSubmittedApp] = useState<Application | null>(null);
@@ -38,6 +41,7 @@ export default function ApplyView({ onApplicationSubmit, onGoToPortal }: ApplyVi
   const [hasOnlyFans, setHasOnlyFans] = useState(false);
   const [ofLink, setOfLink] = useState('');
   const [currentRevenue, setCurrentRevenue] = useState(0);
+  const [attachedImageUrl, setAttachedImageUrl] = useState('');
 
   const [hoursPerWeek, setHoursPerWeek] = useState(10);
   const [biggestChallenge, setBiggestChallenge] = useState('traffic');
@@ -45,6 +49,17 @@ export default function ApplyView({ onApplicationSubmit, onGoToPortal }: ApplyVi
 
   // Local Validation Error
   const [error, setError] = useState('');
+
+  const handleAttachedImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAttachedImageUrl(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const revenueOptions = [
     { value: 0, label: "Brand new (No OnlyFans yet)" },
@@ -99,7 +114,8 @@ export default function ApplyView({ onApplicationSubmit, onGoToPortal }: ApplyVi
         biggestChallenge,
         status: 'pending',
         dateSubmitted: new Date().toISOString(),
-        notes: notes.trim() ? notes : undefined
+        notes: notes.trim() ? notes : undefined,
+        attachedImageUrl: attachedImageUrl || undefined
       };
 
       // Call parent handler to save to local storage/state
@@ -111,8 +127,8 @@ export default function ApplyView({ onApplicationSubmit, onGoToPortal }: ApplyVi
 
   if (submittedApp) {
     return (
-      <div className="relative min-h-screen bg-[#0a0b1e] text-white overflow-hidden pb-24">
-        <div className="absolute inset-0 bg-grid opacity-100 pointer-events-none" />
+      <div className="relative min-h-screen bg-transparent text-white overflow-hidden pb-24">
+
         
         <div className="relative mx-auto max-w-3xl px-4 pt-16 text-center">
           
@@ -132,11 +148,29 @@ export default function ApplyView({ onApplicationSubmit, onGoToPortal }: ApplyVi
               Profile Received, {submittedApp.fullName.split(' ')[0]}!
             </h1>
             <p className="mt-4 text-gray-400 text-sm max-w-xl mx-auto">
-              Your growth analysis audit is currently executing. We have allocated a dedicated Q3 candidate file for you.
+              Your growth analysis audit is currently executing. We have allocated a dedicated candidate file for you.
             </p>
 
+            {/* Manager Dispatch Notification Badge */}
+            <div className="mt-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-left flex items-start gap-3">
+              <div className="p-2 bg-emerald-500/20 text-emerald-400 rounded-xl flex-shrink-0">
+                <Mail className="h-5 w-5" />
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">
+                    📬 Manager Dispatched & Notified
+                  </span>
+                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" />
+                </div>
+                <p className="text-xs text-gray-300 leading-relaxed">
+                  Your candidate application and profile data have been sent directly to the manager's email inbox (<strong className="text-white font-mono">{siteConfig?.managerEmail || 'ipexagency57@gmail.com'}</strong>) and pushed as a live notification alert to the Manager's Private Site.
+                </p>
+              </div>
+            </div>
+
             {/* Receipt Summary block */}
-            <div className="bg-black/60 border border-white/5 rounded-2xl p-6 mt-8 text-left space-y-4">
+            <div className="bg-black/60 border border-white/5 rounded-2xl p-6 mt-6 text-left space-y-4">
               <div className="flex justify-between items-center border-b border-white/5 pb-3">
                 <span className="text-xs font-mono text-gray-500">Application ID</span>
                 <span className="text-xs font-mono font-bold text-orange-400">{submittedApp.id}</span>
@@ -165,6 +199,18 @@ export default function ApplyView({ onApplicationSubmit, onGoToPortal }: ApplyVi
                   <span className="text-white font-medium mt-0.5 block">{submittedApp.hoursPerWeek} hrs / week</span>
                 </div>
               </div>
+
+              {submittedApp.attachedImageUrl && (
+                <div className="pt-3 border-t border-white/5">
+                  <span className="text-gray-500 block uppercase font-mono tracking-wider text-[10px] mb-2">Attached Image / Screenshot Proof</span>
+                  <div className="relative rounded-xl overflow-hidden border border-orange-500/30 max-h-48 bg-black flex items-center justify-center">
+                    <img src={submittedApp.attachedImageUrl} alt="Submitted Proof" className="max-h-48 w-full object-contain" referrerPolicy="no-referrer" />
+                    <span className="absolute bottom-2 right-2 bg-emerald-500 text-black px-2 py-0.5 text-[9px] font-mono font-bold rounded">
+                      Attached & Sent to Manager
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Next Steps List */}
@@ -208,12 +254,12 @@ export default function ApplyView({ onApplicationSubmit, onGoToPortal }: ApplyVi
   }
 
   return (
-    <div className="relative min-h-screen bg-[#0a0b1e] text-white overflow-hidden pb-24">
+    <div className="relative min-h-screen bg-transparent text-white overflow-hidden pb-24">
       
       {/* Background decoration */}
       <div className="absolute top-1/4 left-1/4 h-[350px] w-[350px] rounded-full bg-orange-600/5 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 h-[400px] w-[400px] rounded-full bg-red-600/5 blur-[130px] pointer-events-none" />
-      <div className="absolute inset-0 bg-grid opacity-100 pointer-events-none" />
+
 
       <div className="relative mx-auto max-w-2xl px-4 pt-16">
         
@@ -474,6 +520,51 @@ export default function ApplyView({ onApplicationSubmit, onGoToPortal }: ApplyVi
                     </select>
                     <ChevronDown className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500 pointer-events-none" />
                   </div>
+                </div>
+
+                {/* Profile / Screenshot Image Upload Card */}
+                <div className="rounded-2xl border border-orange-500/25 bg-orange-500/5 p-5 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <ImageIcon className="h-4 w-4 text-orange-400" />
+                    <span className="text-xs font-bold text-white uppercase font-mono">
+                      Attach Profile or Stats Screenshot (Optional & Recommended)
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-400 leading-relaxed">
+                    Attach a screenshot of your social stats or profile page. This image will be sent directly to the manager's email (<strong className="text-white">{siteConfig?.managerEmail || 'ipexagency57@gmail.com'}</strong>) and displayed in the Manager's Private Site.
+                  </p>
+
+                  <div className="space-y-2 pt-1">
+                    <label className="flex items-center justify-center gap-2 rounded-xl border border-dashed border-white/20 bg-black/40 p-3 text-xs text-gray-300 hover:border-orange-500/60 cursor-pointer transition-colors">
+                      <Upload className="h-4 w-4 text-orange-400" />
+                      <span>Choose Screenshot File to Attach</span>
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        onChange={handleAttachedImageUpload}
+                        className="hidden" 
+                      />
+                    </label>
+
+                    <div className="text-center text-[10px] font-mono text-gray-500 uppercase">— OR PASTE IMAGE URL —</div>
+
+                    <input
+                      type="url"
+                      value={attachedImageUrl}
+                      onChange={(e) => setAttachedImageUrl(e.target.value)}
+                      placeholder="https://i.postimg.cc/..."
+                      className="w-full rounded-xl border border-white/10 bg-black/40 py-2.5 px-3.5 text-xs text-white placeholder-gray-600 focus:border-orange-500/60 focus:outline-none"
+                    />
+                  </div>
+
+                  {attachedImageUrl && (
+                    <div className="relative rounded-xl overflow-hidden border border-emerald-500/40 h-36 bg-black flex items-center justify-center">
+                      <img src={attachedImageUrl} alt="Attachment Screenshot" className="h-full w-full object-contain" referrerPolicy="no-referrer" />
+                      <span className="absolute top-2 right-2 bg-emerald-500 text-black px-2 py-0.5 text-[9px] font-mono font-bold rounded shadow">
+                        ✓ Image Attached
+                      </span>
+                    </div>
+                  )}
                 </div>
 
               </motion.div>

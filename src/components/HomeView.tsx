@@ -11,17 +11,33 @@ import {
   Plus, 
   Minus,
   CheckCircle2,
-  Lock
+  Lock,
+  Sparkles,
+  Award,
+  Image as ImageIcon,
+  Video
 } from 'lucide-react';
 import PrivacyShield from './PrivacyShield';
 import MarketingFunnel from './MarketingFunnel';
+import ProofGallery from './ProofGallery';
+import TestimonialsSection from './TestimonialsSection';
+import { ProofScreenshot, Testimonial, SiteConfig } from '../types';
 
 interface HomeViewProps {
   onApplyClick: () => void;
   onServicesClick: () => void;
+  proofs: ProofScreenshot[];
+  testimonials: Testimonial[];
+  siteConfig: SiteConfig;
 }
 
-export default function HomeView({ onApplyClick, onServicesClick }: HomeViewProps) {
+export default function HomeView({ 
+  onApplyClick, 
+  onServicesClick,
+  proofs,
+  testimonials,
+  siteConfig
+}: HomeViewProps) {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
 
   const pillars = [
@@ -93,29 +109,36 @@ export default function HomeView({ onApplyClick, onServicesClick }: HomeViewProp
   };
 
   return (
-    <div className="relative min-h-screen bg-[#0a0b1e] text-white overflow-hidden pb-24">
+    <div className="relative min-h-screen bg-transparent text-white overflow-hidden pb-24">
       
+      {/* Top Announcement Bar if enabled in siteConfig */}
+      {siteConfig.showAnnouncement && (
+        <div className="bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 px-4 py-2 text-center text-xs font-mono font-bold text-white shadow-lg flex items-center justify-center gap-2">
+          <Sparkles className="h-3.5 w-3.5 animate-spin" />
+          <span>{siteConfig.topAnnouncement}</span>
+        </div>
+      )}
+
       {/* Absolute Ambient Glows to match screen */}
       <div className="absolute top-1/4 left-1/4 h-[450px] w-[450px] rounded-full bg-orange-600/10 blur-[130px] pointer-events-none" />
       <div className="absolute top-1/3 right-1/4 h-[400px] w-[400px] rounded-full bg-red-600/10 blur-[120px] pointer-events-none" />
       <div className="absolute top-10 right-10 h-[250px] w-[250px] rounded-full bg-yellow-500/10 blur-[100px] pointer-events-none" />
       <div className="absolute bottom-1/4 left-10 h-[300px] w-[300px] rounded-full bg-indigo-500/10 blur-[110px] pointer-events-none" />
 
-      {/* Blueprint Grid Overlay */}
-      <div className="absolute inset-0 bg-grid opacity-100 pointer-events-none" />
 
-      {/* HERO SECTION MATCHING SCREENSHOT EXACTLY */}
-      <div className="relative mx-auto max-w-5xl px-4 pt-16 sm:pt-24 text-center">
+
+      {/* HERO SECTION */}
+      <div className="relative mx-auto max-w-5xl px-4 pt-12 sm:pt-20 text-center">
         
         {/* Urgent Warning Ribbon */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 rounded-full border border-orange-500/20 bg-orange-500/5 px-4 py-1.5 text-xs font-medium text-orange-400 mb-8 sm:mb-12"
+          className="inline-flex items-center gap-2 rounded-full border border-orange-500/20 bg-orange-500/5 px-4 py-1.5 text-xs font-medium text-orange-400 mb-8 sm:mb-10"
         >
           <Zap className="h-3.5 w-3.5 animate-pulse text-orange-400" />
-          <span>Only 3 creator slots left for Q3 partnership programs</span>
+          <span>Only {siteConfig.slotsRemaining} creator slots left for Q3 management</span>
         </motion.div>
 
         {/* Main H1 Title */}
@@ -159,7 +182,6 @@ export default function HomeView({ onApplyClick, onServicesClick }: HomeViewProp
             onClick={onApplyClick}
             className="group relative cursor-pointer overflow-hidden rounded-full bg-gradient-to-r from-orange-500 via-red-500 to-orange-600 px-10 py-5 text-lg font-bold tracking-wide text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/30 active:scale-95"
           >
-            {/* Glossy shine */}
             <div className="absolute inset-0 h-full w-full bg-gradient-to-r from-white/10 via-transparent to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
             
             <span className="flex items-center justify-center gap-2">
@@ -167,7 +189,6 @@ export default function HomeView({ onApplyClick, onServicesClick }: HomeViewProp
             </span>
           </button>
 
-          {/* Screenshot Match: Month to Month. Cancel any time. */}
           <div className="rounded-full border border-white/5 bg-white/[0.03] px-5 py-2 text-xs font-mono tracking-wide text-gray-400 backdrop-blur-sm sm:text-sm">
             Month to Month. Cancel any time.
           </div>
@@ -182,7 +203,7 @@ export default function HomeView({ onApplyClick, onServicesClick }: HomeViewProp
         >
           <div className="flex items-center gap-1.5">
             <CheckCircle2 className="h-3.5 w-3.5 text-orange-500" />
-            <span>AVG. SUBSCRIBER GROWTH: +240%</span>
+            <span>TOTAL AGENCY REVENUE: {siteConfig.totalAgencyRevenue}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <CheckCircle2 className="h-3.5 w-3.5 text-orange-500" />
@@ -194,6 +215,117 @@ export default function HomeView({ onApplyClick, onServicesClick }: HomeViewProp
           </div>
         </motion.div>
 
+      </div>
+
+      {/* VERIFIED MANAGER PROOF & SCREENSHOTS SECTION */}
+      <div className="mx-auto mt-28 max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1 text-xs font-mono font-bold text-emerald-400 mb-3">
+            <ImageIcon className="h-3.5 w-3.5 text-emerald-400" />
+            <span>Manager Verified Proof & Screenshots</span>
+          </div>
+          <h2 className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
+            Real Revenue Evidence
+          </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-gray-400 text-sm sm:text-base">
+            Inspect live payout statements and mass PPV campaign receipts verified and uploaded directly by our Operations Manager.
+          </p>
+        </div>
+
+        <ProofGallery proofs={proofs} />
+      </div>
+
+      {/* DEMO INTRODUCTORY VIDEO SECTION (BELOW HOUSE PAYMENT & VERIFIED REVENUE EVIDENCE) */}
+      <div className="mx-auto mt-20 max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div className="rounded-3xl border border-orange-500/30 bg-gradient-to-b from-[#0e0f2b] via-[#090a1d] to-[#070817] p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+          {/* Background Ambient Glows */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-red-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="text-center max-w-3xl mx-auto mb-8 relative z-10">
+            <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/40 bg-orange-500/10 px-4 py-1.5 text-xs font-mono font-bold text-orange-400 mb-4 shadow-lg shadow-orange-500/10">
+              <Video className="h-4 w-4 text-orange-400 animate-pulse" />
+              <span>Official Agency Strategy & Platform Demo</span>
+            </div>
+
+            <h3 className="font-display text-2xl sm:text-4xl font-black text-white tracking-tight">
+              {siteConfig.introVideoTitle || "iPex Agency Overview & OnlyFans Scaling Strategy"}
+            </h3>
+            <p className="mt-3 text-xs sm:text-sm text-gray-300 leading-relaxed max-w-2xl mx-auto">
+              {siteConfig.introVideoDescription || "Watch how our 24/7 inbox chatting team, viral social traffic engines, and legal DMCA protection scale creators to the top 0.1%."}
+            </p>
+          </div>
+
+          {/* Video Player Box */}
+          <div className="relative rounded-2xl overflow-hidden border border-white/15 bg-black/90 shadow-2xl max-w-4xl mx-auto">
+            {(() => {
+              const url = siteConfig.introVideoUrl || "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
+              const isYouTube = url.includes('youtube.com') || url.includes('youtu.be');
+              const isVimeo = url.includes('vimeo.com');
+
+              if (isYouTube) {
+                let embedUrl = url;
+                if (url.includes('watch?v=')) {
+                  const id = url.split('v=')[1]?.split('&')[0];
+                  embedUrl = `https://www.youtube.com/embed/${id}`;
+                } else if (url.includes('youtu.be/')) {
+                  const id = url.split('youtu.be/')[1]?.split('?')[0];
+                  embedUrl = `https://www.youtube.com/embed/${id}`;
+                }
+                return (
+                  <iframe
+                    src={embedUrl}
+                    title={siteConfig.introVideoTitle || "Agency Demo Video"}
+                    className="w-full aspect-video rounded-2xl border-0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                );
+              }
+
+              if (isVimeo) {
+                const id = url.split('vimeo.com/')[1]?.split('?')[0];
+                return (
+                  <iframe
+                    src={`https://player.vimeo.com/video/${id}`}
+                    title={siteConfig.introVideoTitle || "Agency Demo Video"}
+                    className="w-full aspect-video rounded-2xl border-0"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                  />
+                );
+              }
+
+              return (
+                <video
+                  src={url}
+                  controls
+                  poster="https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&q=80&w=1200"
+                  className="w-full aspect-video rounded-2xl object-cover"
+                >
+                  Your browser does not support HTML5 video streaming.
+                </video>
+              );
+            })()}
+          </div>
+
+          {/* Video Metadata Footer */}
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-5 text-xs font-mono text-gray-400 relative z-10">
+            <div className="flex items-center gap-2 text-emerald-400 font-semibold">
+              <ShieldCheck className="h-4 w-4 text-emerald-400" />
+              <span>Verified Manager Video Demo</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-gray-300">Manager Hotline: <strong className="text-orange-400 font-mono">{siteConfig.managerWhatsapp || siteConfig.supportPhone}</strong></span>
+              <button
+                onClick={onApplyClick}
+                className="rounded-xl bg-gradient-to-r from-orange-500 to-red-500 px-4 py-2 text-xs font-bold text-white hover:opacity-90 transition-opacity cursor-pointer shadow-lg shadow-orange-500/20"
+              >
+                Apply After Watching
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* CORE PILLARS SECTION */}
@@ -221,7 +353,6 @@ export default function HomeView({ onApplyClick, onServicesClick }: HomeViewProp
               transition={{ duration: 0.5, delay: idx * 0.1 }}
               className="group relative rounded-2xl border border-white/5 bg-white/[0.02] p-8 transition-all hover:border-white/10 hover:bg-white/[0.04] hover:-translate-y-1"
             >
-              {/* Subtle top glow bar */}
               <div className="absolute top-0 left-8 right-8 h-[2px] bg-gradient-to-r from-transparent via-orange-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               
               <div className="inline-flex rounded-xl bg-white/5 p-3.5 mb-6 group-hover:bg-gradient-to-br group-hover:from-orange-500/10 group-hover:to-red-500/10 group-hover:scale-105 transition-all">
@@ -279,11 +410,28 @@ export default function HomeView({ onApplyClick, onServicesClick }: HomeViewProp
         </div>
       </div>
 
+      {/* CREATOR TESTIMONIALS SECTION */}
+      <div className="mx-auto mt-32 max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 rounded-full border border-orange-500/30 bg-orange-500/10 px-3.5 py-1 text-xs font-mono font-bold text-orange-400 mb-3">
+            <Award className="h-3.5 w-3.5 text-orange-400" />
+            <span>Creator Testimonials</span>
+          </div>
+          <h2 className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
+            Partner Reviews & Endorsements
+          </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-gray-400 text-sm sm:text-base">
+            Read real stories from creators who scaled their income and reclaimed their personal freedom with iPex Agency.
+          </p>
+        </div>
+
+        <TestimonialsSection testimonials={testimonials} />
+      </div>
+
       {/* HOW THE ENGINE SCALES YOU */}
       <div className="mx-auto mt-32 max-w-7xl px-4 sm:px-6 lg:px-8">
         
         <div className="rounded-3xl border border-white/5 bg-gradient-to-b from-white/[0.03] to-transparent p-8 sm:p-12 lg:p-16 relative overflow-hidden">
-          {/* Inner ambient glow */}
           <div className="absolute -right-24 -bottom-24 w-80 h-80 rounded-full bg-red-600/5 blur-[80px]" />
 
           <div className="max-w-2xl">
@@ -358,7 +506,7 @@ export default function HomeView({ onApplyClick, onServicesClick }: HomeViewProp
               >
                 <button
                   onClick={() => toggleFaq(idx)}
-                  className="flex w-full items-center justify-between p-6 text-left focus:outline-none"
+                  className="flex w-full items-center justify-between p-6 text-left focus:outline-none cursor-pointer"
                 >
                   <span className="font-display text-base sm:text-lg font-semibold text-white pr-4">
                     {faq.question}
@@ -397,7 +545,7 @@ export default function HomeView({ onApplyClick, onServicesClick }: HomeViewProp
           </p>
           <button
             onClick={onApplyClick}
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-red-500 px-8 py-4 text-sm font-bold text-white hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-orange-500 to-red-500 px-8 py-4 text-sm font-bold text-white hover:opacity-90 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
           >
             Submit Application Profile
           </button>
@@ -408,3 +556,4 @@ export default function HomeView({ onApplyClick, onServicesClick }: HomeViewProp
     </div>
   );
 }
+
