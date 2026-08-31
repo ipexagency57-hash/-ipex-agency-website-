@@ -12,7 +12,6 @@ import {
   Minus,
   CheckCircle2,
   Lock,
-  Sparkles,
   Award,
   Image as ImageIcon,
   Video
@@ -114,7 +113,7 @@ export default function HomeView({
       {/* Top Announcement Bar if enabled in siteConfig */}
       {siteConfig.showAnnouncement && (
         <div className="bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 px-4 py-2 text-center text-xs font-mono font-bold text-white shadow-lg flex items-center justify-center gap-2">
-          <Sparkles className="h-3.5 w-3.5 animate-spin" />
+          <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
           <span>{siteConfig.topAnnouncement}</span>
         </div>
       )}

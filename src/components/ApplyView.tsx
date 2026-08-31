@@ -22,11 +22,12 @@ import { Application, SiteConfig } from '../types';
 
 interface ApplyViewProps {
   onApplicationSubmit: (app: Application) => void;
-  onGoToPortal: () => void;
+  onGoToPortal?: () => void;
+  onGoHome?: () => void;
   siteConfig?: SiteConfig;
 }
 
-export default function ApplyView({ onApplicationSubmit, onGoToPortal, siteConfig }: ApplyViewProps) {
+export default function ApplyView({ onApplicationSubmit, onGoHome, siteConfig }: ApplyViewProps) {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [submittedApp, setSubmittedApp] = useState<Application | null>(null);
@@ -239,11 +240,32 @@ export default function ApplyView({ onApplicationSubmit, onGoToPortal, siteConfi
             {/* Actions */}
             <div className="mt-10 flex flex-col sm:flex-row gap-4">
               <button
-                onClick={onGoToPortal}
-                className="flex-1 cursor-pointer rounded-xl bg-gradient-to-r from-orange-500 to-red-500 py-4 font-bold text-sm text-white hover:opacity-90 transition-opacity"
+                onClick={() => {
+                  setSubmittedApp(null);
+                  setStep(1);
+                  setFullName('');
+                  setEmail('');
+                  setInstagram('');
+                  setTiktok('');
+                  setCurrentRevenue(0);
+                  setHasOnlyFans(false);
+                  setOfLink('');
+                  setAttachedImageUrl('');
+                }}
+                className="flex-1 cursor-pointer rounded-xl border border-white/10 bg-white/5 py-4 font-bold text-sm text-gray-300 hover:bg-white/10 hover:text-white transition-all"
               >
-                Go to Creator Status Hub
+                Submit Another Application
               </button>
+              {siteConfig?.managerWhatsapp && (
+                <a
+                  href={`https://wa.me/${siteConfig.managerWhatsapp.replace(/[^0-9]/g, '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 text-center cursor-pointer rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 py-4 font-bold text-sm text-white hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20"
+                >
+                  <span>Chat on WhatsApp</span>
+                </a>
+              )}
             </div>
 
           </motion.div>

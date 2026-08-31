@@ -14,7 +14,6 @@ import {
   Search,
   Filter,
   ShieldAlert,
-  Sparkles,
   X,
   RefreshCw,
   Lock,
@@ -35,7 +34,8 @@ import {
   Video,
   Phone,
   Link,
-  Instagram
+  Instagram,
+  Zap
 } from 'lucide-react';
 import { Application, ProofScreenshot, Testimonial, SiteConfig } from '../types';
 
@@ -688,7 +688,7 @@ export default function AdminPanel({
                     }}
                     className="inline-flex items-center gap-1.5 rounded-xl border border-pink-500/30 bg-pink-500/10 px-4 py-2 text-xs font-mono font-bold text-pink-300 hover:bg-pink-500/20 transition-all cursor-pointer"
                   >
-                    <Sparkles className="h-3.5 w-3.5 text-pink-400" />
+                    <Zap className="h-3.5 w-3.5 text-pink-400" />
                     <span>⚡ Load All Demo Links</span>
                   </button>
 
@@ -816,7 +816,7 @@ export default function AdminPanel({
                 <div className="space-y-3 rounded-2xl border border-white/10 bg-black/40 p-4">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-mono font-bold uppercase tracking-wider text-gray-300 flex items-center gap-1.5">
-                      <Sparkles className="h-4 w-4 text-white" />
+                      <Link className="h-4 w-4 text-white" />
                       <span>X (Twitter) Official</span>
                     </span>
                     {configForm.twitterUrl && (

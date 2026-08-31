@@ -2,7 +2,7 @@ import React from 'react';
 import { 
   ShieldCheck, 
   ChevronRight, 
-  Sparkles,
+  Zap,
   Video
 } from 'lucide-react';
 import ProofGallery from './ProofGallery';
@@ -140,7 +140,7 @@ export default function ResultsView({ onApplyClick, proofs = [], siteConfig }: R
           <div className="absolute -top-12 -right-12 h-32 w-32 bg-orange-500/20 rounded-full blur-2xl pointer-events-none" />
           
           <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-orange-400 bg-orange-500/10 px-3 py-1 rounded-full uppercase border border-orange-500/20 mb-4">
-            <Sparkles className="h-3.5 w-3.5" />
+            <Zap className="h-3.5 w-3.5 text-orange-400" />
             Ready To Scale Your Account?
           </span>
 

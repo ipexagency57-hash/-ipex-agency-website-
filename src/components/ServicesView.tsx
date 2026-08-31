@@ -10,7 +10,7 @@ import {
   CheckCircle2,
   Clock,
   Briefcase,
-  Sparkles,
+  Sliders,
   ArrowRight
 } from 'lucide-react';
 
@@ -240,7 +240,7 @@ export default function ServicesView({ onApplyClick }: ServicesViewProps) {
           
           <div className="text-center mb-12">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-500/10 px-3 py-1 text-xs font-mono text-orange-400 border border-orange-500/10">
-              <Sparkles className="h-3.5 w-3.5 text-orange-400" />
+              <Sliders className="h-3.5 w-3.5 text-orange-400" />
               <span>Interactive Simulator</span>
             </span>
             <h2 className="mt-4 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl">

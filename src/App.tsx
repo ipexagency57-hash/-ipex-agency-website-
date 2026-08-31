@@ -186,21 +186,39 @@ export default function App() {
   // Scroll to top on tab change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    setScrollY(0);
   }, [activeTab]);
+
+  // Scroll position tracking for smooth background fade on home landing page
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Compute background opacity: 1 at top of home page, slowly fades away as user scrolls down
+  const homeBgOpacity = Math.max(0, Math.min(1, 1 - scrollY / 750));
 
   return (
     <div className="relative flex min-h-screen flex-col bg-[#0a0b1e] text-white antialiased selection:bg-orange-500/30 selection:text-orange-200">
       
-      {/* Custom App Background Image - Restricted to Home Page & 100% Mobile Visibility */}
-      {activeTab === 'home' && (
-        <>
+      {/* Custom App Background Image - Restricted to Home Page with smooth scroll fade */}
+      {activeTab === 'home' && homeBgOpacity > 0 && (
+        <div 
+          className="fixed inset-0 z-0 pointer-events-none transition-opacity duration-150 ease-out"
+          style={{ opacity: homeBgOpacity }}
+        >
           <div 
-            className="fixed inset-0 z-0 w-full h-full bg-cover bg-center bg-no-repeat pointer-events-none opacity-100"
+            className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat opacity-100"
             style={{ backgroundImage: `url('https://i.postimg.cc/XvFgxTxW/Grid-Art-20260801-145811711.jpg')` }}
           />
-          {/* Slightly increased dark gradient overlay for optimal legibility while preserving background graphics */}
-          <div className="fixed inset-0 z-0 bg-gradient-to-b from-[#0a0b1e]/55 via-[#0a0b1e]/40 to-[#0a0b1e]/60 pointer-events-none" />
-        </>
+          {/* Dark gradient overlay for optimal legibility while preserving background graphics */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0b1e]/55 via-[#0a0b1e]/40 to-[#0a0b1e]/60" />
+        </div>
       )}
 
       <div className="relative z-10 flex flex-col min-h-screen">
@@ -244,7 +262,6 @@ export default function App() {
             {activeTab === 'apply' && (
               <ApplyView 
                 onApplicationSubmit={handleApplicationSubmit}
-                onGoToPortal={() => setActiveTab('admin')}
                 siteConfig={siteConfig}
               />
             )}

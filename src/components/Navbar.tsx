@@ -1,15 +1,15 @@
 import React from 'react';
 import { Tab } from '../types';
 import { motion } from 'motion/react';
-import { Lock, Menu, X, ShieldCheck } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: Tab;
   setActiveTab: (tab: Tab) => void;
-  applicationCount: number;
+  applicationCount?: number;
 }
 
-export default function Navbar({ activeTab, setActiveTab, applicationCount }: NavbarProps) {
+export default function Navbar({ activeTab, setActiveTab }: NavbarProps) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const navItems: { id: Tab; label: string }[] = [
@@ -66,46 +66,21 @@ export default function Navbar({ activeTab, setActiveTab, applicationCount }: Na
               })}
             </div>
 
-            {/* Manager Private Site Access Button */}
+            {/* Quick Apply CTA */}
             <button
-              onClick={() => setActiveTab('admin')}
-              className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer border ${
-                activeTab === 'admin'
-                  ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white border-orange-400/50 shadow-lg shadow-orange-500/20'
-                  : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10 hover:border-white/20 hover:text-white'
-              }`}
+              onClick={() => setActiveTab('apply')}
+              className="flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg shadow-orange-500/20 hover:opacity-90"
             >
-              <Lock className="h-3.5 w-3.5 text-orange-400" />
-              <span>Manager's Site</span>
-              {applicationCount > 0 && (
-                <span className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
-                  {applicationCount}
-                </span>
-              )}
+              <span>Apply Now</span>
             </button>
           </div>
 
           {/* Mobile Hamburger button */}
           <div className="flex md:hidden items-center gap-3">
             <button
-              onClick={() => setActiveTab('admin')}
-              className={`flex h-9 items-center gap-1.5 rounded-full px-3 text-xs font-bold uppercase border cursor-pointer ${
-                activeTab === 'admin'
-                  ? 'bg-gradient-to-r from-orange-500 to-red-500 border-transparent text-white'
-                  : 'bg-white/5 border-white/10 text-white'
-              }`}
-            >
-              <Lock className="h-3.5 w-3.5 text-orange-400" />
-              <span>Manager</span>
-              {applicationCount > 0 && (
-                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white">
-                  {applicationCount}
-                </span>
-              )}
-            </button>
-            <button
               onClick={() => setIsOpen(!isOpen)}
               className="rounded-lg p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-none"
+              aria-label="Toggle navigation menu"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
